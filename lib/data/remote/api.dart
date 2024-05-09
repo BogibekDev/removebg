@@ -14,11 +14,8 @@ class ApiClient {
 
     if (response.statusCode == 200) {
       http.Response img = await http.Response.fromStream(response);
-      print(img.bodyBytes.toString());
       return img.bodyBytes;
     } else {
-      var some  = await http.Response.fromStream(response);
-      print("${some.body}");
       return null;
     }
   }

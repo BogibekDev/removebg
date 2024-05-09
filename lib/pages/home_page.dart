@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:before_after/before_after.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         leading: const Icon(Icons.sort_rounded),
         centerTitle: true,
         title: const Text(
-          "Remove Background",
+          "Fonni olib tashlash",
           style: TextStyle(fontSize: 20),
         ),
         actions: [
@@ -48,36 +47,42 @@ class _HomePageState extends State<HomePage> {
                 )
         ],
       ),
-      body: Center(
-        child: removedbg
-            ? Screenshot(
-                controller: screenshotController,
-                child: Image.memory(image!),
-              )
-            : loaded
-                ? GestureDetector(
-                    onTap: pickImage,
-                    child: Image.file(File(imagePath)),
-                  )
-                : DashedBorder(
-                    padding: const EdgeInsets.all(60),
-                    color: Colors.grey,
-                    radius: 12,
-                    child: SizedBox(
-                      width: 200,
-                      height: 56,
-                      child: MaterialButton(
-                        color: Colors.greenAccent,
-                        onPressed: pickImage,
-                        child: const Text("Remove Background"),
+      body: Container(
+        margin: const EdgeInsets.all(14),
+        child: DashedBorder(
+          padding: const EdgeInsets.all(6),
+          color: Colors.grey,
+          radius: 12,
+          child: removedbg
+              ? Screenshot(
+                  controller: screenshotController,
+                  child: Image.memory(image!),
+                )
+              : loaded
+                  ? GestureDetector(
+                      onTap: pickImage,
+                      child: Image.file(File(imagePath)),
+                    )
+                  : DashedBorder(
+                      padding: const EdgeInsets.all(60),
+                      color: Colors.grey,
+                      radius: 12,
+                      child: SizedBox(
+                        width: 200,
+                        height: 56,
+                        child: MaterialButton(
+                          color: Colors.amber,
+                          onPressed: pickImage,
+                          child: const Text("Rasm tanlang"),
+                        ),
                       ),
                     ),
-                  ),
+        ),
       ),
       bottomNavigationBar: SizedBox(
         height: 56,
         child: MaterialButton(
-          color: Colors.greenAccent,
+          color: Colors.amber,
           onPressed: loaded
               ? () async {
                   setState(() {
@@ -98,7 +103,7 @@ class _HomePageState extends State<HomePage> {
               ? const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation(Colors.white),
                 )
-              : const Text("Remove Background",
+              : const Text("Olib tashlash",
                   style: TextStyle(color: Colors.black45, fontSize: 16)),
         ),
       ),
@@ -135,7 +140,7 @@ class _HomePageState extends State<HomePage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Successfully downloaded"),
+          content: Text("Muvaffaqqiyatli saqlandi!"),
         ),
       );
     }
