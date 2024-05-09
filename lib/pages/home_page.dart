@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   bool removedbg = false;
   bool isLoading = false;
   bool isDownloading = false;
+  var value = 0.5;
 
   Uint8List? image;
   String imagePath = '';
@@ -50,14 +51,25 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: removedbg
-            ? Screenshot(
-                controller: screenshotController,
-                child: Image.memory(image!),
+            ? BeforeAfter(
+                key: UniqueKey(),
+                value: value,
+                before: Image.file(File(imagePath)),
+                after: Screenshot(
+                  key: UniqueKey(),
+                  controller: screenshotController,
+                  child: Image.memory(key: UniqueKey(), image!),
+                ),
+                onValueChanged: (value) {
+                  setState(() {
+                    this.value = value;
+                  });
+                },
               )
             : loaded
                 ? GestureDetector(
                     onTap: pickImage,
-                    child: Image.file(File(imagePath)),
+                    child: Image.file(key: UniqueKey(), File(imagePath)),
                   )
                 : DashedBorder(
                     padding: const EdgeInsets.all(60),
