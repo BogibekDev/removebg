@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -123,9 +124,16 @@ class _HomePageState extends State<HomePage> {
   void downloadImage() async {
     isDownloading = true;
 
-    var perm = await Permission.storage.request();
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    final version = int.parse(androidInfo.version.release);
+
+    var status = version >= 11
+        ? await Permission.manageExternalStorage.request().isGranted
+        : await Permission.storage.request().isGranted;
+
     var fileName = "${DateTime.now().microsecondsSinceEpoch}.png";
-    if (perm.isGranted) {
+    if (status) {
       final directory = Directory("storage/emulated/0/removebg");
 
       if (!await directory.exists()) {
@@ -139,11 +147,10 @@ class _HomePageState extends State<HomePage> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Muvaffaqqiyatli saqlandi!"),
-        ),
+        const SnackBar(content: Text("Muvaffaqqiyatli saqlandi!")),
       );
     }
+
     isDownloading = false;
   }
 }
