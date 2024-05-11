@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:before_after/before_after.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   bool isDownloading = false;
 
+  var value = 0.5;
+
+  late Uint8List image2;
   Uint8List? image;
   String imagePath = '';
 
@@ -55,9 +59,21 @@ class _HomePageState extends State<HomePage> {
           color: Colors.grey,
           radius: 12,
           child: removedbg
-              ? Screenshot(
-                  controller: screenshotController,
-                  child: Image.memory(image!),
+              ? BeforeAfter(
+                  value: value,
+                  after: Image.file(
+                    File(imagePath),
+                    fit: BoxFit.cover,
+                  ),
+                  before: Container(
+                    color: Colors.white,
+                    child: Image.memory(image!),
+                  ),
+                  onValueChanged: (value) {
+                    setState(() {
+                      this.value = value;
+                    });
+                  },
                 )
               : loaded
                   ? GestureDetector(
@@ -93,6 +109,7 @@ class _HomePageState extends State<HomePage> {
                   if (image != null) {
                     removedbg = true;
                     isLoading = false;
+                    image2 = image!;
                     setState(() {});
                   } else {
                     isLoading = false;
@@ -140,11 +157,14 @@ class _HomePageState extends State<HomePage> {
         await directory.create(recursive: true);
       }
 
-      await screenshotController.captureAndSave(
-        directory.path,
-        delay: const Duration(milliseconds: 500),
-        fileName: fileName,
-      );
+      final file = File('${directory.path}/$fileName');
+      file.writeAsBytesSync(image!, mode: FileMode.write);
+
+      // await screenshotController.captureAndSave(
+      //   directory.path,
+      //   delay: const Duration(milliseconds: 500),
+      //   fileName: fileName,
+      // );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Muvaffaqqiyatli saqlandi!")),
