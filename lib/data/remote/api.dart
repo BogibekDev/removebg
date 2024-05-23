@@ -37,6 +37,7 @@ class ApiClient {
       if (response.statusCode == 402) {
         count++;
         changeApikey();
+        removebg(imagePath);
       }
       return null;
     }
